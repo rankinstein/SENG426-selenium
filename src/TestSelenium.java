@@ -19,11 +19,10 @@ public class TestSelenium {
     @Test
     public void goto_HomePage(){
         System.out.println("Starting test " + new Object(){}.getClass().getEnclosingMethod().getName());
-        PageObject page = new ACMEpass(driver);
-        page.home();
+        ACMEpass page = new ACMEpass(driver);
+        page.signIn("admin@acme.com", "K-10ficile", false);
         String url = driver.getCurrentUrl();
         Assert.assertEquals("http://localhost:8080/#/", url);
-        page.signIn("admin@acme.com", "K-10ficile", false);
         try{
             TimeUnit.SECONDS.sleep(3);
         }catch(Exception e){

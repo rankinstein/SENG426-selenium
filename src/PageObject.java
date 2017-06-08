@@ -40,7 +40,14 @@ public class PageObject {
         driver.findElement(By.id("rememberMe")).click();
     }
 
+    public boolean onAcmeSite(){
+        return driver.getCurrentUrl().contains(baseURL);
+    }
+
     public void signIn(String email, String password, Boolean rememberMe){
+        if(!onAcmeSite()){
+            home();
+        }
         openSignInModal();
         enterUsername(email);
         enterPassword(password);
