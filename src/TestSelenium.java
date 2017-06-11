@@ -22,10 +22,18 @@ public class TestSelenium {
     @Before
     public void loginIn() {
         ACMEpass page = new ACMEpass(driver);
-        page.signIn("admin@acme.com", "K-10ficile", false);
-        TimeUnit.SECONDS.sleep(1);
+        driver.get("http://localhost:8080/");
+        driver.findElement(By.id("login")).click();
+        driver.findElement(By.id("username")).sendKeys("frank.paul@acme.com");
+        driver.findElement(By.id("password")).sendKeys("starwars");
+        driver.findElement(By.className("btn-primary")).click();
+        try{
+            TimeUnit.SECONDS.sleep(1);
+        }catch(Exception e){}
         driver.get("http://localhost:8080/#/acme-pass");
-        TimeUnit.SECONDS.sleep(1);
+        try{
+            TimeUnit.SECONDS.sleep(1);
+        }catch(Exception e){}
     }
 
     @Test
@@ -56,7 +64,7 @@ public class TestSelenium {
     }
 
     @Test
-    public void createTest() throws Exception {
+    public void createTest() {
         int size_bf = driver.findElements(By.tagName("tr")).size();
         createPass();
         int size_af = driver.findElements(By.tagName("tr")).size();
@@ -64,16 +72,22 @@ public class TestSelenium {
     }
 
     @Test
-    public void genPwdTest() throws Exception {
+    public void genPwdTest() {
 
         driver.findElement(By.className("btn-primary")).click();
-        TimeUnit.MILLISECONDS.sleep(300);
+        try{
+            TimeUnit.MILLISECONDS.sleep(300);
+        }catch(Exception e){} 
         driver.findElement(By.className("btn-primary")).click();
-        TimeUnit.MILLISECONDS.sleep(300);
+        try{
+            TimeUnit.MILLISECONDS.sleep(300);
+        }catch(Exception e){} 
         driver.findElement(By.className("btn-primary")).click();
         String pwd = driver.findElement(By.id("field_password")).getAttribute("value");
         driver.findElement(By.xpath("//button[@type='submit']")).click();
-        TimeUnit.MILLISECONDS.sleep(300);
+        try{
+            TimeUnit.MILLISECONDS.sleep(300);
+        }catch(Exception e){} 
         String set_pwd = driver.findElement(By.id("field_password")).getAttribute("value");
 
         assertEquals(pwd, set_pwd);
@@ -88,16 +102,20 @@ public class TestSelenium {
     }
 
     @Test
-    public void pwdSettingTest() throws Exception {
+    public void pwdSettingTest() {
 
         driver.findElement(By.className("btn-primary")).click();
-        TimeUnit.MILLISECONDS.sleep(300);
+        try{
+            TimeUnit.MILLISECONDS.sleep(300);
+        }catch(Exception e){} 
         driver.findElement(By.className("btn-primary")).click();
         driver.findElement(By.id("field_lower")).click();
         driver.findElement(By.id("field_length")).clear();
         driver.findElement(By.id("field_length")).sendKeys("10");
         driver.findElement(By.className("btn-primary")).click();
-        TimeUnit.MILLISECONDS.sleep(300);
+        try{
+            TimeUnit.MILLISECONDS.sleep(300);
+        }catch(Exception e){} 
         String pwd = driver.findElement(By.id("field_password")).getAttribute("value");
 
         assertEquals(pwd.matches(".*[a-z].*"), false);
@@ -105,29 +123,37 @@ public class TestSelenium {
     }
 
     @Test
-    public void editTest() throws Exception {
+    public void editTest() {
         createPass();
 
         driver.findElement(By.className("btn-info")).click();
-        TimeUnit.MILLISECONDS.sleep(300);
+        try{
+            TimeUnit.MILLISECONDS.sleep(300);
+        }catch(Exception e){} 
         driver.findElement(By.id("field_password")).clear();
         driver.findElement(By.id("field_password")).sendKeys("new password");
         driver.findElement(By.xpath("//button[@type='submit']")).click();
-        TimeUnit.MILLISECONDS.sleep(500);
+        try{
+            TimeUnit.MILLISECONDS.sleep(300);
+        }catch(Exception e){} 
         String pwd = driver.findElement(By.className("acmepass-password")).getAttribute("value");
 
         assertEquals(pwd, "new password");
     }
 
     @Test
-    public void deleteTest() throws Exception {
+    public void deleteTest() {
         createPass();
 
         int size_bf = driver.findElements(By.tagName("tr")).size();
         driver.findElement(By.className("btn-danger")).click();
-        TimeUnit.MILLISECONDS.sleep(300);
+        try{
+            TimeUnit.MILLISECONDS.sleep(300);
+        }catch(Exception e){} 
         driver.findElement(By.className("btn-danger")).click();
-        TimeUnit.MILLISECONDS.sleep(500);
+        try{
+            TimeUnit.MILLISECONDS.sleep(300);
+        }catch(Exception e){} 
         int size_af = driver.findElements(By.tagName("tr")).size();
         assertEquals(size_bf-size_af, 1);
     }
@@ -142,14 +168,16 @@ public class TestSelenium {
         clearDatabase();
     }
 
-    private void createPass() throws Exception {
+    private void createPass() {
         driver.findElement(By.className("btn-primary")).click();
         driver.findElement(By.id("field_site")).sendKeys("site");
         driver.findElement(By.id("field_login")).sendKeys("login");
         driver.findElement(By.id("field_password")).sendKeys("password");
         driver.findElement(By.xpath("//button[@type='submit']")).click();
 
-        TimeUnit.MILLISECONDS.sleep(500);
+        try{
+            TimeUnit.MILLISECONDS.sleep(500);
+        }catch(Exception e){} 
     }
 
 
