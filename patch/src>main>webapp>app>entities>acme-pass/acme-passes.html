@@ -1,0 +1,74 @@
+<div>
+	<style type="text/css">
+		.acmepass-password {
+			background: none;
+			border: none;
+			color: transparent;
+			text-shadow: 0 0 0 #000;
+			width: 200px;
+		}
+	</style>
+    <h2>ACME Passes</h2>
+    <jhi-alert></jhi-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="acme-pass.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span>Create new ACME Pass</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
+                    <th jh-sort-by="id"><span>ID</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="site"><span>Site</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="login"><span>Login</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="password"><span>Password</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="createdDate"><span>Created Date</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="lastModifiedDate"><span>Last Modified Date</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="acmePass in vm.acmePasses track by acmePass.id">
+                    <td>{{acmePass.id}}</td>
+                    <td>{{acmePass.site}}</td>
+                    <td>{{acmePass.login}}</td>
+                    <td>
+						<div>
+
+                            <input type="password" ng-if="!acmePass.visible" ng-model="acmePass.password" class="acmepass-password" style="font-size: 1em; margin: -5px 0;" readonly/>
+                            <input type="text" ng-if="acmePass.visible" ng-model="acmePass.password" class="acmepass-password" style="font-size: 1em; margin: -5px 0;" readonly/>
+							<span ng-click="vm.toggleVisible(acmePass.id)" style="float:right; cursor: pointer; padding: 5px 20px 0 0;" class="glyphicon glyphicon-eye-open"></span>
+						</div>
+					</td>
+                    <td>{{acmePass.createdDate| date:'medium'}}</td>
+                    <td>{{acmePass.lastModifiedDate| date:'medium'}}</td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button ui-sref="acme-pass.edit({id:acmePass.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                            <button ui-sref="acme-pass.delete({id:acmePass.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="text-center">
+        <jhi-item-count page="vm.page" total="vm.queryCount" items-per-page="vm.itemsPerPage"></jhi-item-count>
+    </div>
+    <uib-pager total-items="vm.totalItems" ng-model="vm.page" ng-change="vm.transition()"></uib-pager>
+</div>
