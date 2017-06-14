@@ -161,6 +161,10 @@ public class TestSelenium {
         //Line below not require so long as the table default sorts by ID
         //driver.findElement(By.cssSelector("th[jh-sort-by=id]")).click();
 
+        clearDatabase();
+        databaseCommand("INSERT INTO acmepass VALUES ('1','zombie.com','zula','3AC9t/Opqh+D4LEZU0LFYg==','2017-06-14 10:32:02','2017-06-14 10:32:02','6');");
+        databaseCommand("INSERT INTO acmepass VALUES ('2','allthebeans.com','alphonse','j2T+ivryl+YPPvI1CNvvjw==','2016-05-13 01:32:02','2016-05-13 01:32:02','6');");
+
         waitMS(300);
         String id = driver.findElements(By.cssSelector("tr > td:nth-child(1)")).get(0).getText();
 
@@ -170,85 +174,120 @@ public class TestSelenium {
         waitMS(300);
         id = driver.findElements(By.cssSelector("tr > td:nth-child(1)")).get(0).getText();
 
-        assertEquals("8", id);
+        assertEquals("2", id);
+
+        clearDatabase();
     }
 
     @Test
     public void sortBySite() {
+
+        clearDatabase();
+        databaseCommand("INSERT INTO acmepass VALUES ('2','allthebeans.com','zula','3AC9t/Opqh+D4LEZU0LFYg==','2017-06-14 10:32:02','2017-06-14 10:32:02','6');");
+        databaseCommand("INSERT INTO acmepass VALUES ('1','zombie.com','alphonse','j2T+ivryl+YPPvI1CNvvjw==','2016-05-13 01:32:02','2016-05-13 01:32:02','6');");
+
         driver.findElement(By.cssSelector("th[jh-sort-by=site]")).click();
         waitMS(300);
         String site = driver.findElements(By.cssSelector("tr > td:nth-child(2)")).get(0).getText();
 
-        assertEquals("site", site);
+        assertEquals("allthebeans.com", site);
 
         driver.findElement(By.cssSelector("th[jh-sort-by=site]")).click();
         waitMS(300);
         site = driver.findElements(By.cssSelector("tr > td:nth-child(2)")).get(0).getText();
 
-        assertEquals("site", site);
+        assertEquals("zombie.com", site);
+
+        clearDatabase();
     }
 
     @Test
     public void sortByLogin() {
+
+        clearDatabase();
+        databaseCommand("INSERT INTO acmepass VALUES ('2','zombie.com','alphonse','3AC9t/Opqh+D4LEZU0LFYg==','2017-06-14 10:32:02','2017-06-14 10:32:02','6');");
+        databaseCommand("INSERT INTO acmepass VALUES ('1','allthebeans.com','zula','j2T+ivryl+YPPvI1CNvvjw==','2016-05-13 01:32:02','2016-05-13 01:32:02','6');");
+
         driver.findElement(By.cssSelector("th[jh-sort-by=login]")).click();
         waitMS(300);
         String login = driver.findElements(By.cssSelector("tr > td:nth-child(3)")).get(0).getText();
 
-        assertEquals("1ogin", login);
+        assertEquals("alphonse", login);
 
         driver.findElement(By.cssSelector("th[jh-sort-by=login]")).click();
         waitMS(300);
         login = driver.findElements(By.cssSelector("tr > td:nth-child(3)")).get(0).getText();
 
-        assertEquals("login", login);
+        assertEquals("zula", login);
+
+        clearDatabase();
     }
 
     @Test
     public void sortByPassword() {
+
+        clearDatabase();
+        //Passwords are inserted in their encrypted forms:
+        databaseCommand("INSERT INTO acmepass VALUES ('2','zombie.com','zula','j2T+ivryl+YPPvI1CNvvjw==','2017-06-14 10:32:02','2017-06-14 10:32:02','6');");
+        databaseCommand("INSERT INTO acmepass VALUES ('1','allthebeans.com','alphonse','3AC9t/Opqh+D4LEZU0LFYg==','2016-05-13 01:32:02','2016-05-13 01:32:02','6');");
+
         driver.findElement(By.cssSelector("th[jh-sort-by=password]")).click();
         waitMS(300);
-        String password = driver.findElements(By.cssSelector("tr > td:nth-child(4)")).get(0).getText();
 
-        //FIXME: FIGURE OUT WHAT THESE PASSWORDS ARE
-        assertEquals("password", password);
+        String id = driver.findElements(By.cssSelector("tr > td:nth-child(1)")).get(0).getText();
+
+        assertEquals("2", id);
 
         driver.findElement(By.cssSelector("th[jh-sort-by=password]")).click();
         waitMS(300);
-        password = driver.findElements(By.cssSelector("tr > td:nth-child(4)")).get(0).getText();
 
-        //FIXME: FIGURE OUT WHAT THESE PASSWORDS ARE
-        assertEquals("password", password);
+        id = driver.findElements(By.cssSelector("tr > td:nth-child(1)")).get(0).getText();
+
+        assertEquals("1", id);
+
+        clearDatabase();
     }
 
     @Test
     public void sortByDateCreated() {
+
+        clearDatabase();
+        databaseCommand("INSERT INTO acmepass VALUES ('2','zombie.com','zula','3AC9t/Opqh+D4LEZU0LFYg==','2016-05-13 01:32:02','2017-06-14 10:32:02','6');");
+        databaseCommand("INSERT INTO acmepass VALUES ('1','allthebeans.com','alphonse','j2T+ivryl+YPPvI1CNvvjw==','2016-09-14 10:32:02','2016-10-29 11:32:02','6');");
+
         driver.findElement(By.cssSelector("th[jh-sort-by=createdDate]")).click();
         waitMS(300);
         String createdDate = driver.findElements(By.cssSelector("tr > td:nth-child(5)")).get(0).getText();
 
-        assertEquals("Jun 12, 2017 6:08:03 PM", createdDate);
+        assertEquals("May 13, 2016 1:32:02 AM", createdDate);
 
         driver.findElement(By.cssSelector("th[jh-sort-by=createdDate]")).click();
         waitMS(300);
         createdDate = driver.findElements(By.cssSelector("tr > td:nth-child(5)")).get(0).getText();
 
-        assertEquals("Jun 13, 2017 12:25:12 PM", createdDate);
+        assertEquals("Sep 14, 2016 10:32:02 AM", createdDate);
     }
 
     @Test
     public void sortByDateModified() {
+
+        clearDatabase();
+        databaseCommand("INSERT INTO acmepass VALUES ('2','zombie.com','zula','3AC9t/Opqh+D4LEZU0LFYg==','2016-09-14 10:32:02','2016-10-29 11:32:02','6');");
+        databaseCommand("INSERT INTO acmepass VALUES ('1','allthebeans.com','alphonse','j2T+ivryl+YPPvI1CNvvjw==','2016-05-13 01:32:02','2017-06-14 10:32:02','6');");
+
         driver.findElement(By.cssSelector("th[jh-sort-by=lastModifiedDate]")).click();
         waitMS(300);
         String lastModifiedDate = driver.findElements(By.cssSelector("tr > td:nth-child(6)")).get(0).getText();
 
-        assertEquals("Jun 12, 2017 6:08:03 PM", lastModifiedDate);
+        assertEquals("Oct 29, 2016 11:32:02 AM", lastModifiedDate);
 
         driver.findElement(By.cssSelector("th[jh-sort-by=lastModifiedDate]")).click();
         waitMS(300);
         lastModifiedDate = driver.findElements(By.cssSelector("tr > td:nth-child(6)")).get(0).getText();
 
-        assertEquals("Jun 13, 2017 12:25:12 PM", lastModifiedDate);
+        assertEquals("Jun 14, 2017 10:32:02 AM", lastModifiedDate);
 
+        clearDatabase();
     }
 
     @After
@@ -275,6 +314,26 @@ public class TestSelenium {
         try {
             TimeUnit.MILLISECONDS.sleep(timeout);
         }catch(Exception e){}
+    }
+
+    private static void databaseCommand(String sql) {
+        Connection con;
+        String driver = "com.mysql.jdbc.Driver";
+        String url = "jdbc:mysql://localhost:3306/acme?useUnicode=true&characterEncoding=utf8&useSSL=false";
+        String user = "acme";
+        String password = "acme";
+        try {
+            Class.forName(driver);
+            con = DriverManager.getConnection(url,user,password);
+            Statement statement = con.createStatement();
+            statement.executeUpdate(sql);
+        }catch(ClassNotFoundException e) {
+            e.printStackTrace();
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static void clearDatabase() {
