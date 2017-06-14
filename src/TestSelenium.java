@@ -19,6 +19,10 @@ public class TestSelenium {
 
     @Before
     public void loginIn() {
+
+        // Line below is necessary to connect to geckodriver on my machine -Brian
+        //System.setProperty("webdriver.gecko.driver", "C:\\workspace\\seng426\\geckodriver.exe");
+
         driver = new FirefoxDriver();
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.get("http://localhost:8080/");
@@ -141,6 +145,101 @@ public class TestSelenium {
         waitMS(300);
         int size_af = driver.findElements(By.tagName("tr")).size();
         assertEquals(size_bf-size_af, 1);
+    }
+
+    @Test
+    public void sortByID() {
+        //Line below not require so long as the table default sorts by ID
+        //driver.findElement(By.cssSelector("th[jh-sort-by=id]")).click();
+
+        waitMS(300);
+        String id = driver.findElements(By.cssSelector("tr > td:nth-child(1)")).get(0).getText();
+
+        assertEquals("1", id);
+
+        driver.findElement(By.cssSelector("th[jh-sort-by=id]")).click();
+        waitMS(300);
+        id = driver.findElements(By.cssSelector("tr > td:nth-child(1)")).get(0).getText();
+
+        assertEquals("8", id);
+    }
+
+    @Test
+    public void sortBySite() {
+        driver.findElement(By.cssSelector("th[jh-sort-by=site]")).click();
+        waitMS(300);
+        String site = driver.findElements(By.cssSelector("tr > td:nth-child(2)")).get(0).getText();
+
+        assertEquals("site", site);
+
+        driver.findElement(By.cssSelector("th[jh-sort-by=site]")).click();
+        waitMS(300);
+        site = driver.findElements(By.cssSelector("tr > td:nth-child(2)")).get(0).getText();
+
+        assertEquals("site", site);
+    }
+
+    @Test
+    public void sortByLogin() {
+        driver.findElement(By.cssSelector("th[jh-sort-by=login]")).click();
+        waitMS(300);
+        String login = driver.findElements(By.cssSelector("tr > td:nth-child(3)")).get(0).getText();
+
+        assertEquals("1ogin", login);
+
+        driver.findElement(By.cssSelector("th[jh-sort-by=login]")).click();
+        waitMS(300);
+        login = driver.findElements(By.cssSelector("tr > td:nth-child(3)")).get(0).getText();
+
+        assertEquals("login", login);
+    }
+
+    @Test
+    public void sortByPassword() {
+        driver.findElement(By.cssSelector("th[jh-sort-by=password]")).click();
+        waitMS(300);
+        String password = driver.findElements(By.cssSelector("tr > td:nth-child(4)")).get(0).getText();
+
+        //FIXME: FIGURE OUT WHAT THESE PASSWORDS ARE
+        assertEquals("password", password);
+
+        driver.findElement(By.cssSelector("th[jh-sort-by=password]")).click();
+        waitMS(300);
+        password = driver.findElements(By.cssSelector("tr > td:nth-child(4)")).get(0).getText();
+
+        //FIXME: FIGURE OUT WHAT THESE PASSWORDS ARE
+        assertEquals("password", password);
+    }
+
+    @Test
+    public void sortByDateCreated() {
+        driver.findElement(By.cssSelector("th[jh-sort-by=createdDate]")).click();
+        waitMS(300);
+        String createdDate = driver.findElements(By.cssSelector("tr > td:nth-child(5)")).get(0).getText();
+
+        assertEquals("Jun 12, 2017 6:08:03 PM", createdDate);
+
+        driver.findElement(By.cssSelector("th[jh-sort-by=createdDate]")).click();
+        waitMS(300);
+        createdDate = driver.findElements(By.cssSelector("tr > td:nth-child(5)")).get(0).getText();
+
+        assertEquals("Jun 13, 2017 12:25:12 PM", createdDate);
+    }
+
+    @Test
+    public void sortByDateModified() {
+        driver.findElement(By.cssSelector("th[jh-sort-by=lastModifiedDate]")).click();
+        waitMS(300);
+        String lastModifiedDate = driver.findElements(By.cssSelector("tr > td:nth-child(6)")).get(0).getText();
+
+        assertEquals("Jun 12, 2017 6:08:03 PM", lastModifiedDate);
+
+        driver.findElement(By.cssSelector("th[jh-sort-by=lastModifiedDate]")).click();
+        waitMS(300);
+        lastModifiedDate = driver.findElements(By.cssSelector("tr > td:nth-child(6)")).get(0).getText();
+
+        assertEquals("Jun 13, 2017 12:25:12 PM", lastModifiedDate);
+
     }
 
     @After
