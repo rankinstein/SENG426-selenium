@@ -18,7 +18,7 @@ public class TestSelenium {
     private Connection con;
 
     @BeforeClass
-    public void connectDB() {
+    public void static connectDB() {
         String driver = "com.mysql.jdbc.Driver";
         String url = "jdbc:mysql://localhost:3306/acme?useUnicode=true&characterEncoding=utf8&useSSL=false";
         String user = "acme";
@@ -320,6 +320,11 @@ public class TestSelenium {
     @After
     public void closeDown() {
         driver.close();
+        try {
+            con.close();
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @AfterClass
@@ -347,6 +352,7 @@ public class TestSelenium {
         try {
             Statement statement = con.createStatement();
             statement.executeUpdate(sql);
+            statement.close();
         }catch(SQLException e) {
             e.printStackTrace();
         }catch (Exception e) {
