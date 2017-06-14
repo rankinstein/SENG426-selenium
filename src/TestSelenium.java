@@ -72,10 +72,16 @@ public class TestSelenium {
 
     @Test
     public void createTest() {
-        int size_bf = driver.findElements(By.tagName("tr")).size();
+        clearDatabase();
         createPass();
-        int size_af = driver.findElements(By.tagName("tr")).size();
-        assertEquals(1, size_af-size_bf);
+
+        String site = driver.findElement(By.cssSelector("tbody>tr:nth-child(1)>td:nth-child(2)")).getText();
+        String login = driver.findElement(By.cssSelector("tbody>tr:nth-child(1)>td:nth-child(3)")).getText();
+        String pwd = driver.findElement(By.className("acmepass-password")).getAttribute("value");
+    
+        assertEquals(site, "site");
+        assertEquals(login, "login");
+        assertEquals(pwd, "password");
     }
 
     @Test
