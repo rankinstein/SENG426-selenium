@@ -15,6 +15,25 @@ import static junit.framework.TestCase.assertEquals;
 
 public class TestSelenium {
     private static WebDriver driver;
+    private Connection con;
+
+    @BeforeClass
+    public void connectDB() {
+        String driver = "com.mysql.jdbc.Driver";
+        String url = "jdbc:mysql://localhost:3306/acme?useUnicode=true&characterEncoding=utf8&useSSL=false";
+        String user = "acme";
+        String password = "acme";
+        try {
+            Class.forName(driver);
+            con = DriverManager.getConnection(url,user,password);
+        }catch(ClassNotFoundException e) {
+            e.printStackTrace();
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
     @Before
@@ -325,18 +344,9 @@ public class TestSelenium {
     }
 
     private static void databaseCommand(String sql) {
-        Connection con;
-        String driver = "com.mysql.jdbc.Driver";
-        String url = "jdbc:mysql://localhost:3306/acme?useUnicode=true&characterEncoding=utf8&useSSL=false";
-        String user = "acme";
-        String password = "acme";
         try {
-            Class.forName(driver);
-            con = DriverManager.getConnection(url,user,password);
             Statement statement = con.createStatement();
             statement.executeUpdate(sql);
-        }catch(ClassNotFoundException e) {
-            e.printStackTrace();
         }catch(SQLException e) {
             e.printStackTrace();
         }catch (Exception e) {
