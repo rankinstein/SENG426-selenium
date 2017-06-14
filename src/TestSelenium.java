@@ -109,13 +109,14 @@ public class TestSelenium {
         waitMS(300);
         driver.findElement(By.className("btn-primary")).click();
         driver.findElement(By.id("field_lower")).click();
+        driver.findElement(By.id("field_digits")).click();
         driver.findElement(By.id("field_length")).clear();
         driver.findElement(By.id("field_length")).sendKeys("10");
         driver.findElement(By.className("btn-primary")).click();
         waitMS(500);
         String pwd = driver.findElement(By.id("field_password")).getAttribute("value");
 
-        assertEquals(pwd.matches(".*[a-z].*"), false);
+        assertEquals(pwd.matches(".*[a-z0-9].*"), false);
         assertEquals(pwd.length(), 10);
     }
 
@@ -125,12 +126,20 @@ public class TestSelenium {
 
         driver.findElement(By.className("btn-info")).click();
         waitMS(300);
+        driver.findElement(By.id("field_site")).clear();
+        driver.findElement(By.id("field_site")).sendKeys("new site");
+        driver.findElement(By.id("field_login")).clear();
+        driver.findElement(By.id("field_login")).sendKeys("new login");
         driver.findElement(By.id("field_password")).clear();
         driver.findElement(By.id("field_password")).sendKeys("new password");
         driver.findElement(By.xpath("//button[@type='submit']")).click();
         waitMS(300);
+        String site = driver.findElement(By.cssSelector("tbody>tr:nth-child(1)>td:nth-child(2)")).getText();
+        String login = driver.findElement(By.cssSelector("tbody>tr:nth-child(1)>td:nth-child(3)")).getText();
         String pwd = driver.findElement(By.className("acmepass-password")).getAttribute("value");
-
+	
+        assertEquals(site, "new site");
+        assertEquals(login, "new login");
         assertEquals(pwd, "new password");
     }
 
