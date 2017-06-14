@@ -339,23 +339,6 @@ public class TestSelenium {
     }
 
     private static void clearDatabase() {
-        Connection con;
-        String driver = "com.mysql.jdbc.Driver";
-        String url = "jdbc:mysql://localhost:3306/acme?useUnicode=true&characterEncoding=utf8&useSSL=false";
-        String user = "acme";
-        String password = "acme";
-        try {
-            Class.forName(driver);
-            con = DriverManager.getConnection(url,user,password);
-            Statement statement = con.createStatement();
-            String sql = "truncate acmepass";
-            statement.executeUpdate(sql);
-        }catch(ClassNotFoundException e) {
-            e.printStackTrace();
-        }catch(SQLException e) {
-            e.printStackTrace();
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
+        databaseCommand("truncate acmepass");
     }
 }
