@@ -266,6 +266,8 @@ public class TestSelenium {
         createdDate = driver.findElements(By.cssSelector("tr > td:nth-child(5)")).get(0).getText();
 
         assertEquals("Sep 14, 2016 10:32:02 AM", createdDate);
+
+        clearDatabase();
     }
 
     @Test
