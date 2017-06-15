@@ -15,6 +15,25 @@ import static junit.framework.TestCase.assertEquals;
 
 public class TestSelenium {
     private static WebDriver driver;
+    private Connection con;
+
+    @BeforeClass
+    public void static connectDB() {
+        String driver = "com.mysql.jdbc.Driver";
+        String url = "jdbc:mysql://localhost:3306/acme?useUnicode=true&characterEncoding=utf8&useSSL=false";
+        String user = "acme";
+        String password = "acme";
+        try {
+            Class.forName(driver);
+            con = DriverManager.getConnection(url,user,password);
+        }catch(ClassNotFoundException e) {
+            e.printStackTrace();
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
     @Before
@@ -78,10 +97,16 @@ public class TestSelenium {
 
     @Test
     public void createTest() {
-        int size_bf = driver.findElements(By.tagName("tr")).size();
+        clearDatabase();
         createPass();
-        int size_af = driver.findElements(By.tagName("tr")).size();
-        assertEquals(1, size_af-size_bf);
+
+        String site = driver.findElement(By.cssSelector("tbody>tr:nth-child(1)>td:nth-child(2)")).getText();
+        String login = driver.findElement(By.cssSelector("tbody>tr:nth-child(1)>td:nth-child(3)")).getText();
+        String pwd = driver.findElement(By.className("acmepass-password")).getAttribute("value");
+    
+        assertEquals(site, "site");
+        assertEquals(login, "login");
+        assertEquals(pwd, "password");
     }
 
     @Test
@@ -301,6 +326,11 @@ public class TestSelenium {
     @After
     public void closeDown() {
         driver.close();
+        try {
+            con.close();
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @AfterClass
@@ -325,18 +355,10 @@ public class TestSelenium {
     }
 
     private static void databaseCommand(String sql) {
-        Connection con;
-        String driver = "com.mysql.jdbc.Driver";
-        String url = "jdbc:mysql://localhost:3306/acme?useUnicode=true&characterEncoding=utf8&useSSL=false";
-        String user = "acme";
-        String password = "acme";
         try {
-            Class.forName(driver);
-            con = DriverManager.getConnection(url,user,password);
             Statement statement = con.createStatement();
             statement.executeUpdate(sql);
-        }catch(ClassNotFoundException e) {
-            e.printStackTrace();
+            statement.close();
         }catch(SQLException e) {
             e.printStackTrace();
         }catch (Exception e) {
@@ -345,23 +367,6 @@ public class TestSelenium {
     }
 
     private static void clearDatabase() {
-        Connection con;
-        String driver = "com.mysql.jdbc.Driver";
-        String url = "jdbc:mysql://localhost:3306/acme?useUnicode=true&characterEncoding=utf8&useSSL=false";
-        String user = "acme";
-        String password = "acme";
-        try {
-            Class.forName(driver);
-            con = DriverManager.getConnection(url,user,password);
-            Statement statement = con.createStatement();
-            String sql = "truncate acmepass";
-            statement.executeUpdate(sql);
-        }catch(ClassNotFoundException e) {
-            e.printStackTrace();
-        }catch(SQLException e) {
-            e.printStackTrace();
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
+        databaseCommand("truncate acmepass");
     }
 }
