@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.WebDriver;
 
+import java.util.List;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -322,6 +323,64 @@ public class TestSelenium {
 
         clearDatabase();
     }
+	
+    @Test
+    public void Pagination() {
+	    
+        int NextCount = 0;							
+        driver.findElement(By.linkText("ACMEPass")).click();
+        waitMS(2000);
+        //Check if the the number of pass bars is decreased by 20 after turning to next page (when number < 40)
+        //Read the number of passes in the page
+        String Items = driver.findElement(By.className("info")).getText();	
+        String[] bits = Items.split(" ");
+        String lastWord = bits[bits.length - 2];
+        int NumofItems = Integer.parseInt(lastWord);
+
+        while(NumofItems<=20){
+            createPass();
+            NumofItems++;
+        }
+	    
+        Nextpage();
+        waitMS(1000);
+        List<WebElement> Nextelements = driver.findElements(By.cssSelector("tbody > tr"));
+
+        if(NumofItems<=40){
+            NextCount = NumofItems - 20;
+        }else{
+            NextCount = 20;
+        }
+        Previouspage();
+        waitMS(1000);
+        List<WebElement> PreviousElements = driver.findElements(By.cssSelector("tbody > tr"));
+
+        //Compare the previous ID when turn to next page then turn back to see if they are still the same,
+        //and compare the next ID when turn to previous page and then turn to next to see if they are the same.
+        //Compare the current page ID and the next page ID to see if they are different
+        //Compare the current page ID and the previous page ID to see if they are different
+        String PreviousRowID = driver.findElement(By.cssSelector("tbody > tr:nth-child(1) > td:nth-child(1)")).getText();		
+        Nextpage();
+        waitMS(1000);
+        String NextRowID = driver.findElement(By.cssSelector("tbody > tr:nth-child(1) > td:nth-child(1)")).getText();		
+        Previouspage();
+        waitMS(1000);
+        String CurrentChanged_RowID = driver.findElement(By.cssSelector("tbody > tr:nth-child(1) > td:nth-child(1)")).getText();		
+        Nextpage();
+        waitMS(1000);
+        String NextChanged_RowID = driver.findElement(By.cssSelector("tbody > tr:nth-child(1) > td:nth-child(1)")).getText();		
+
+        int num_PreviousRowID = Integer.parseInt(PreviousRowID);
+        int num_NextRowID = Integer.parseInt(NextRowID);
+        int num_CurrentChanged_RowID = Integer.parseInt(CurrentChanged_RowID);
+        int num_NextChanged_RowID = Integer.parseInt(NextChanged_RowID);
+
+        boolean check = false;
+        if(Nextelements.size()==NextCount && PreviousElements.size()==20 && num_PreviousRowID!=num_NextRowID && num_PreviousRowID==num_CurrentChanged_RowID && num_NextRowID!=num_CurrentChanged_RowID && num_NextRowID==num_NextChanged_RowID)
+            check = true;
+
+        assertEquals(true, check);
+    }
 
     @After
     public void closeDown() {
@@ -352,6 +411,14 @@ public class TestSelenium {
         try {
             TimeUnit.MILLISECONDS.sleep(timeout);
         }catch(Exception e){}
+    }
+	
+    private void Nextpage(){
+        driver.findElement(By.cssSelector(".pager.ng-valid.ng-not-empty > .next a")).click();
+    }
+
+    private void Previouspage() {
+        driver.findElement(By.cssSelector(".pager.ng-valid.ng-not-empty > .previous a")).click();
     }
 
     private static void databaseCommand(String sql) {
