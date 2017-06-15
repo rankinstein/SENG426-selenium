@@ -36,6 +36,12 @@ public class TestSelenium {
     }
 
     @Test
+    public void viewPassList() {
+        assertEquals(1, driver.findElements(By.cssSelector("table")).size());
+        assertEquals(1, driver.findElements(By.cssSelector("th[jh-sort-by=id]")).size());
+    }
+
+    @Test
     public void tablePwdVisibilityTest(){
         WebElement pwdColumn = driver.findElements(By.cssSelector("td")).get(3);
         WebElement visibilityButton = pwdColumn.findElement(By.cssSelector("span"));
