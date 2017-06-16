@@ -16,10 +16,10 @@ import static junit.framework.TestCase.assertEquals;
 
 public class TestSelenium {
     private static WebDriver driver;
-    private Connection con;
+    private static Connection con;
 
     @BeforeClass
-    public void static connectDB() {
+    public static void connectDB() {
         String driver = "com.mysql.jdbc.Driver";
         String url = "jdbc:mysql://localhost:3306/acme?useUnicode=true&characterEncoding=utf8&useSSL=false";
         String user = "acme";
@@ -63,35 +63,45 @@ public class TestSelenium {
 
     @Test
     public void tablePwdVisibilityTest(){
+        String initialInputType;
+        String nextInputType;
+        String finalInputType;
+
+        createPass();
+
         WebElement pwdColumn = driver.findElements(By.cssSelector("td")).get(3);
         WebElement visibilityButton = pwdColumn.findElement(By.cssSelector("span"));
 
-        String initialInputType = pwdColumn.findElement(By.cssSelector("input")).getAttribute("type");
+        initialInputType = pwdColumn.findElement(By.cssSelector("input")).getAttribute("type");
+        visibilityButton.click();
+        nextInputType = pwdColumn.findElement(By.cssSelector("input")).getAttribute("type");
+        visibilityButton.click();
+        finalInputType = pwdColumn.findElement(By.cssSelector("input")).getAttribute("type");
+
         assertEquals("password", initialInputType);
-        visibilityButton.click();
-        String nextInputType = pwdColumn.findElement(By.cssSelector("input")).getAttribute("type");
         assertEquals("text", nextInputType);
-        visibilityButton.click();
-        String finalInputType = pwdColumn.findElement(By.cssSelector("input")).getAttribute("type");
         assertEquals("password", finalInputType);
     }
 
     @Test
     public void editPwdVisibilityTest(){
-        createPass();
+        String initialInputType;
+        String nextInputType;
+        String finalInputType;
 
+        createPass();
         driver.findElement(By.className("btn-info")).click();
         waitMS(300);
-
         WebElement visibilityButton = driver.findElement(By.cssSelector("span[role='button']"));
 
-        String initialInputType = driver.findElement(By.id("field_password")).getAttribute("type");
+        initialInputType = driver.findElement(By.id("field_password")).getAttribute("type");
+        visibilityButton.click();
+        nextInputType = driver.findElement(By.id("field_password")).getAttribute("type");
+        visibilityButton.click();
+        finalInputType = driver.findElement(By.id("field_password")).getAttribute("type");
+
         assertEquals("Initially expect password to be hidden", "password", initialInputType);
-        visibilityButton.click();
-        String nextInputType = driver.findElement(By.id("field_password")).getAttribute("type");
         assertEquals("Password visible when button clicked", "text", nextInputType);
-        visibilityButton.click();
-        String finalInputType = driver.findElement(By.id("field_password")).getAttribute("type");
         assertEquals("Password hidden when button clicked a second time","password", finalInputType);
     }
 
@@ -154,6 +164,8 @@ public class TestSelenium {
 
     @Test
     public void editTest() {
+        clearDatabase();
+
         createPass();
 
         driver.findElement(By.className("btn-info")).click();
@@ -385,16 +397,16 @@ public class TestSelenium {
     @After
     public void closeDown() {
         driver.close();
-        try {
-            con.close();
-        }catch(SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     @AfterClass
     public static void closeBrowser(){
         clearDatabase();
+        try {
+            con.close();
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private void createPass() {
